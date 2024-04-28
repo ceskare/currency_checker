@@ -78,33 +78,7 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
-#
-# USD = {
-#     "id": 10148,
-#     "pv": 1,
-#     "cur": 52148,
-#     "bd": start_date.day,
-#     "bm": start_date.month,
-#     "by": start_date.year,
-#     "ed": end_date.day,
-#     "em": end_date.month,
-#     "ey": end_date.year,
-#     "x": 48,
-#     "y": 13
-# }
-# GBP =  {
-#     "id": 10148,
-#     "pv": 1,
-#     "cur": 52146,
-#     "bd": start_date.day,
-#     "bm": start_date.month,
-#     "by": start_date.year,
-#     "ed": end_date.day,
-#     "em": end_date.month,
-#     "ey": end_date.year,
-#     "x": 48,
-#     "y": 13
-# }
+
 # TRY =
 # JXY =
 # INR =
@@ -142,19 +116,22 @@ class CurrencyRateParser:
             "x": 48,
             "y": 13
         }
+        currency_name = "EURO"
+
         if currency_name == "EURO":
             currency_params["cur"] = 52170
         elif currency_name == "USD":
             currency_params["cur"] = 52148
         elif currency_name == "GBP":
-            currency_params["cur"] =
+            currency_params["cur"] = 52146
         elif currency_name == "TRY":
-            currency_params["cur"] =
+            currency_params["cur"] = 52158
         elif currency_name == "CNY":
-            currency_params["cur"] =
+            currency_params["cur"] = 52207
         elif currency_name == "INR":
-            currency_params["cur"] =
+            currency_params["cur"] = 52238
         elif currency_name == "JXY":
+            currency_params["cur"] = 52246
         response = requests.get(self.url, params=currency_params)
         if response.status_code == 200:
             return self.parse_currency_rates(start_date, end_date, response)
