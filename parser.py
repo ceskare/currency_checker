@@ -14,8 +14,9 @@ class Params:
 
 
 class CurrencyRateParser:
-    def __init__(self, url):
+    def __init__(self, url, code):
         self.url = url
+        self.code = code
 
     def fetch_currency_rates(self, start_date, end_date):
         currency_params = {
@@ -30,21 +31,20 @@ class CurrencyRateParser:
             "x": 48,
             "y": 13
         }
-        currency_name = "EURO"
 
-        if currency_name == "EURO":
+        if self.code == "EUR":
             currency_params["cur"] = 52170
-        elif currency_name == "USD":
+        elif self.code == "USD":
             currency_params["cur"] = 52148
-        elif currency_name == "GBP":
+        elif self.code == "GBP":
             currency_params["cur"] = 52146
-        elif currency_name == "TRY":
+        elif self.code == "TRY":
             currency_params["cur"] = 52158
-        elif currency_name == "CNY":
+        elif self.code == "CNY":
             currency_params["cur"] = 52207
-        elif currency_name == "INR":
+        elif self.code == "INR":
             currency_params["cur"] = 52238
-        elif currency_name == "JXY":
+        elif self.code == "JXY":
             currency_params["cur"] = 52246
         response = requests.get(self.url, params=currency_params)
         if response.status_code == 200:
@@ -84,11 +84,28 @@ class CurrencyRateParser:
 
         return currency_rates
 
+    def parse_country(self):
+        response = requests.get("https://www.iban.ru/currency-codes")
+        html_code = BeautifulSoup(response.text, 'html.parser')
+        country = []
+        table = html_code.find('tbody')
+        for row in table.find_all('tr'):
+            columns = row.find_all('td')
+            if columns[2].text == self.code:
+                country.append({
+                    "country": columns[0].text.strip(),
+                    "currency": columns[1].text.strip(),
+                })
+
+        return country
+
 # def main():
 # Пример использования класса
 url = "https://www.finmarket.ru/currency/rates/"
-parser = CurrencyRateParser(url)
+name = "EUR"
+parser = CurrencyRateParser(url, name)
 start_date = datetime.strptime("01.02.2022", "%d.%m.%Y")
 end_date = datetime.strptime("05.02.2022", "%d.%m.%Y")
 
 print(parser.fetch_currency_rates(start_date, end_date))
+print(parser.parse_country())
