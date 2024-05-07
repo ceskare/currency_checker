@@ -25,6 +25,6 @@ def fetch_currency_rates(request):
             return render(request, 'main/index.html')
         parser.fetch_currency_rates(start_date, end_date)
         parser.parse_country()
-        currency_rates = Currency.objects.all()
-        country = Country.objects.all()
+        currency_rates = Currency.objects.filter(date__range=(start_date, end_date))
+        country = Country.objects.filter(currency_code=Currency.code)
         return render(request, 'main/index.html', {"currency_rates" : currency_rates, "countries" : country})

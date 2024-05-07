@@ -47,13 +47,19 @@
                 </thead>
                 <tbody>
                     {% for currency in currency_rates %}
-                    <tr>
-                        <td>{{ currency.code }}</td>
-                        <td>{{ currency.country }}</td>
-                        <td>{{ currency.rate }}</td>
-                        <td>{{ currency.date }}</td>
-<!--                        <td>{{ currency.end_time }}</td>-->
-                    </tr>
+                        <tr>
+                            <td>{{ currency.code }}</td>
+                            <td>{{ currency.rate }}</td>
+                            <td>{{ currency.date }}</td>
+                            <td>
+                                <h2>List of Countries</h2>
+                                <ul>
+                                    {% for country in currency.countries.all %}
+                                        <li>{{ country.name }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
