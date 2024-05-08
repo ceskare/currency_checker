@@ -100,12 +100,12 @@ import requests
 from .models import Currency, Country
 
 
-class ParserCounry(models.Model):
-    name = models.CharField("Название страны", max_length=100)
-    currency = models.CharField("Валюта", max_length=3)
-
-    def __str__(self):
-        return self.name
+# class ParserCountry(models.Model):
+#     name = models.CharField("Название страны", max_length=100)
+#     currency = models.CharField("Валюта", max_length=3)
+#
+#     def __str__(self):
+#         return self.name
 
 # class ParserCurrency(models.Model):
 #     code = models.CharField("Код валюты", max_length=3)

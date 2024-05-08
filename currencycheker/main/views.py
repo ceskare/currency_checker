@@ -26,5 +26,15 @@ def fetch_currency_rates(request):
         parser.fetch_currency_rates(start_date, end_date)
         parser.parse_country()
         currency_rates = Currency.objects.filter(date__range=(start_date, end_date))
-        country = Country.objects.filter(currency_code=Currency.code)
-        return render(request, 'main/index.html', {"currency_rates" : currency_rates, "countries" : country})
+        try:  # Проверяем, что есть хотя бы один объект Currency
+            # currency = Currency.objects.get(code='EUR')  # Получаем объект Currency по его коду (например, 'EUR')
+            # country = currency.countries.all()  # Получаем все страны, связанные с этой валютой
+            currency = Currency.objects.filter(code=name).first()
+            country = Country.objects.filter(currency_code=currency)
+            return render(request, 'main/index.html', {"currency_rates": currency_rates, "countries": country})
+        except ValueError:
+            # Обработка случая, если не найдено ни одной записи Currency
+            return render(request, 'main/index.html', {"currency_rates": [], "countries": []})
+        # code = Currency.objects.get(name)
+        # country = Country.objects.filter(currency_code=code)
+        # return render(request, 'main/index.html', {"currency_rates" : currency_rates, "countries" : country})

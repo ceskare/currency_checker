@@ -1,33 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <form method="post" action="{% url 'fetch_currency_rates' %}">
-    {% csrf_token %}
-    <label for="start_date">Start Date:</label>
-    <input type="text" id="start_date" name="start_date" placeholder="YYYY-MM-DD">
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <meta charset="UTF-8">
+            <title>Title</title>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+            <form method="post" action="{% url 'fetch_currency_rates' %}">
+            {% csrf_token %}
+            <label for="start_date">Start Date:</label>
+            <input type="text" id="start_date" name="start_date" placeholder="YYYY-MM-DD">
 
-    <label for="end_date">End Date:</label>
-    <input type="text" id="end_date" name="end_date" placeholder="YYYY-MM-DD">
+            <label for="end_date">End Date:</label>
+            <input type="text" id="end_date" name="end_date" placeholder="YYYY-MM-DD">
 
-    <button type="submit">Fetch Currency Rates</button>
-    </form>
+            <button type="submit">Fetch Currency Rates</button>
+            </form>
+        </div>
+            <button type="submit">Country analysis</button>
+    </main>
 </head>
 <body>
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Dashboard</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-          </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1">
-            <svg class="bi"><use xlink:href="#calendar3"></use></svg>
-            This week
-          </button>
+<!--          <div class="btn-group me-2">-->
+<!--            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>-->
+<!--            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>-->
+<!--          </div>-->
+<!--          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1">-->
+<!--            <svg class="bi"><use xlink:href="#calendar3"></use></svg>-->
+<!--            This week-->
+<!--          </button>-->
         </div>
       </div>
 
@@ -47,19 +52,18 @@
                 </thead>
                 <tbody>
                     {% for currency in currency_rates %}
-                        <tr>
-                            <td>{{ currency.code }}</td>
-                            <td>{{ currency.rate }}</td>
-                            <td>{{ currency.date }}</td>
-                            <td>
-                                <h2>List of Countries</h2>
-                                <ul>
-                                    {% for country in currency.countries.all %}
-                                        <li>{{ country.name }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>{{ currency.code }}</td>
+                        <td>
+                        <ul>
+                            {% for country in currency.countries.all %}
+                                <li>{{ country.name }}</li>
+                            {% endfor %}
+                        </ul>
+                        </td>
+                        <td>{{ currency.rate }}</td>
+                        <td>{{ currency.date }}</td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

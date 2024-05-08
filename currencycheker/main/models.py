@@ -10,7 +10,7 @@ class Currency(models.Model):
     date = models.DateField("Дата", default=timezone.now)
 
     def __str__(self):
-        return self.code, self.country, self.rate, self.date
+        return self.code
 
 class Country(models.Model):
     name = models.CharField("Страна", max_length=100)
