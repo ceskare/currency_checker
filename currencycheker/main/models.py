@@ -2,11 +2,10 @@ from django.utils import timezone
 from django.db import models
 
 class Currency(models.Model):
-    code = models.CharField("Код валюты", max_length=3)
+    code = models.CharField("Код валюты", max_length=3, default="EUR")
     country = models.CharField("Код страны", max_length=10)
     rate = models.DecimalField("Курс валюты", max_digits=10, decimal_places=4)
-    # start_time = models.DateField("Начало периода")
-    # end_time = models.DateField("Конец периода")
+    change = models.CharField("Изменение курса", max_length=7, default="")
     date = models.DateField("Дата", default=timezone.now)
 
     def __str__(self):
@@ -26,3 +25,5 @@ class Country(models.Model):
     #     )
     #     # Если запись была создана, возвращаем True, иначе False
     #     return created
+    def __str__(self):
+        return self.name
