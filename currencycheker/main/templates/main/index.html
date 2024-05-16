@@ -52,28 +52,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                        {% for currency in currency_rates %}
-                    {% for country in countries %}
+                {% for country in countries %}
+                    {% for currency in currency_rates %}
+                        {% if country.currency_code == currency.code %}
                         <tr>
-                            <td>
-                                <ul>
-                                    {% if currency.code == country.currency_code %}
-                                        {{ country.name }}
-                                    {% endif %}
-                                </ul>
-                            </td>
-    <!--                                {{ country.name }}-->
-                            <td> {{ countries.name }}</td>
+                            {% if forloop.first %}
+                                <td>{{ country.name }}</td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
                             <td>{{ currency.code }}</td>
-    <!--                        <ul>-->
-
                             <td>{{ currency.rate }}</td>
                             <td>{{ currency.date }}</td>
                             <td>{{ currency.change }}</td>
                         </tr>
-                        {% endfor %}
+                        {% endif %}
                     {% endfor %}
-                </tbody>
+                {% endfor %}
+            </tbody>
             </table>
         </div>
     </main>

@@ -137,7 +137,7 @@ class CurrencyRateParser:
             currency_params["cur"] = 52246
         response = requests.get("https://www.finmarket.ru/currency/rates/", params=currency_params)
         if response.status_code == 200:
-            return self.parse_currency_rates(start_date, end_date, response, currency_params["cur"])
+            return self.parse_currency_rates(start_date, end_date, response)
         else:
             print("Ошибка при получении страницы:", response.status_code)
             return []
@@ -148,24 +148,6 @@ class CurrencyRateParser:
             return start_date <= user_date <= end_date
         except (ValueError, IndexError):
             return False
-
-    def parse_currency_rates(self, start_date, end_date, response, country):
-        html_code = BeautifulSoup(response.text, 'html.parser')
-        # currency_rates = []
-
-        # Находим все строки таблицы с данными о курсах валют
-        rows = html_code.find_all('tr')[1:]
-        for row in rows:
-            # Извлекаем данные из каждой строки
-            cells = row.find_all('td')
-            if self.is_date_in_range(cells, start_date, end_date):
-                date = datetime.strptime(cells[0].text.strip(), "%d.%m.%Y").date()
-                # currency_unit = cells[1].text.strip()
-                rate = float(cells[2].text.strip().replace(',', '.'))
-                change = cells[3].text.strip()
-                Currency.objects.get_or_create(code=self.code, country=country, rate=rate, date=date, change=change)
-        # return currency_rates
-
     def parse_country(self):
         response = requests.get("https://www.iban.ru/currency-codes")
         html_code = BeautifulSoup(response.text, 'html.parser')
@@ -173,8 +155,24 @@ class CurrencyRateParser:
         table = html_code.find('tbody')
         for row in table.find_all('tr')[1:]:
             columns = row.find_all('td')
-            if columns[2].text in  ["EUR", "USD", "GBP", "TRY", "CNY", "INR", "JXY"]:
-                country_name = columns[0].text.strip()
-                currency_code = columns[1].text.strip()
+            # if columns[2].text == self.code:
+            country_name = columns[0].text.strip()
 
-                Country.objects.get_or_create(name=country_name, currency_code=currency_code)
+            Country.objects.get_or_create(name=country_name, currency_code=columns[2].text)
+
+    def parse_currency_rates(self, start_date, end_date, response):
+        html_code = BeautifulSoup(response.text, 'html.parser')
+        # Находим все строки таблицы с данными о курсах валют
+        rows = html_code.find_all('tr')[1:]
+        for row in rows:
+            # Извлекаем данные из каждой строки
+            cells = row.find_all('td')
+
+            if self.is_date_in_range(cells, start_date, end_date):
+                date = datetime.strptime(cells[0].text.strip(), "%d.%m.%Y").date()
+                rate = float(cells[2].text.strip().replace(',', '.'))
+                change = cells[3].text.strip()
+
+                # Получаем или создаем объект Currency с помощью вашего парсера
+                Currency.objects.get_or_create(code=self.code, rate=rate, date=date, change=change)
+

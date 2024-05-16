@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django.shortcuts import render
 from .models import Currency, Country
 from .parser import CurrencyRateParser
@@ -21,14 +23,15 @@ def fetch_currency_rates(request):
         except ValueError:
             messages.error(request, 'Неверный формат даты. Пожалуйста, используйте формат ГГГГ-ММ-ДД.')
             return render(request, 'main/index.html')
-        Currency.objects.all().delete()
+        # Currency.objects.all().delete()
+        # Country.objects.all().delete()
         for code in ["EUR", "USD", "GBP","TRY", "CNY", "INR", "JXY"]:
             parser = CurrencyRateParser(code)
             parser.fetch_currency_rates(start_date, end_date)
-            parser.parse_country()
-        currency_rates = Currency.objects.filter(date__range=(start_date, end_date))
-        # code = Currency.objects.filter(code=name).first()
+        parser.parse_country()
+        currency_rates = Currency.objects.filter(date__range=(start_date, end_date)).order_by("date")
         country = Country.objects.all()
+        # return render(request, 'main/index.html')
         return render(request, 'main/index.html', {"currency_rates" : currency_rates, "countries" : country})
     else:
         return render(request, 'main/index.html')
