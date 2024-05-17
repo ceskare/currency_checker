@@ -14,15 +14,3 @@ class Currency(models.Model):
     countries = models.ForeignKey('Country', on_delete=models.CASCADE, null=True)
     def __str__(self):
         return self.code
-
-    # @classmethod
-    # def update_or_create(cls, code, country, rate, start_time, end_time):
-    #     obj, created = cls.objects.update_or_create(
-    #         code=code,
-    #         country=country,
-    #         rate=rate,
-    #         start_time=start_time,
-    #         end_time=end_time
-    #     )
-    #     # Если запись была создана, возвращаем True, иначе False
-    #     return created
