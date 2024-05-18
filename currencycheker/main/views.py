@@ -56,15 +56,51 @@ from .models import Currency, Country
 from .parser import CurrencyRateParser
 from datetime import datetime
 from django.contrib import messages
+from django.http import JsonResponse
 import json
 
 def index(request):
     return render(request, 'main/index.html', {"countries": Country.objects.all()})
 
+# def chart(request):
+#     if request.method == 'POST':
+#         selected_countries = request.POST.getlist('selected_countries')
+#         countries = Country.objects.filter(currency_code__in=selected_countries)
+#
+#         data = {}
+#         for country in countries:
+#             currency_data = country.get_currency_data()
+#             data[country.name] = list(currency_data.values('date', 'rate'))
+#
+#         return JsonResponse(data)
+#
+#     countries = Country.objects.all()
+#     return render(request, 'chart.html', {'countries': countries})
+
 def chart(request):
+    if request.method == 'POST':
+        selected_countries = request.POST.getlist('selected_countries')
+        request.session['selected_countries'] = selected_countries
+        return redirect('chart_view')
+
+    countries = Country.objects.all()
+    return render(request, 'chart.html', {'countries': countries})
+
+def chart_view(request):
+    return render(request, 'main/chart.html')
+
+def chart_data(request):
     selected_countries = request.session.get('selected_countries', [])
-    countries = request.session.get('countries', [])
-    return render(request, 'main/chart.html', {"selected_countries": selected_countries})
+    countries = Country.objects.filter(currency_code__in=selected_countries)
+
+    data = {}
+    for country in countries:
+        currency_data = country.get_currency_data()
+        data[country.name] = list(currency_data.values('date', 'rate'))
+
+    print(data)  # Временный вывод данных для проверки
+
+    return JsonResponse(data)
 
 
 def fetch_currency_rates(request):
@@ -91,7 +127,7 @@ def fetch_currency_rates(request):
             'currency_rates': list(currency_rates.values('code', 'rate', 'date')),
             'countries': list(Country.objects.values('name', 'currency_code'))
         }
-        selected_countries = request.POST.getlist('data')
-        request.session['data'] = json.dumps(data, cls=DjangoJSONEncoder)
+        # selected_countries = request.POST.getlist('data')
+        # request.session['data'] = json.dumps(data, cls=DjangoJSONEncoder)
         return render(request, 'main/country_list.html', {"countries": Country.objects.all(), "data": json.dumps(data, cls=DjangoJSONEncoder)})
     return redirect('index')

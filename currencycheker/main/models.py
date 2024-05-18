@@ -6,6 +6,10 @@ class Country(models.Model):
     def __str__(self):
         return self.name
 
+    def get_currency_data(self):
+        print(f"Fetching data for country: {self.currency_set.order_by('date')}")
+        return self.currency_set.order_by('date')
+
 class Currency(models.Model):
     code = models.CharField("Код валюты", max_length=3, default="EUR")
     rate = models.DecimalField("Курс валюты", max_digits=10, decimal_places=4)

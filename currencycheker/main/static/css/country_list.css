@@ -1,0 +1,9 @@
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(3, auto); /* Определение 3 столбцов */
+    gap: 10px; /* Пространство между элементами */
+}
+
+.checkbox-grid div {
+    margin-bottom: 10px; /* Отступ между строками */
+}
