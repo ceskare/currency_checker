@@ -41,8 +41,6 @@ def chart_data(request):
     return JsonResponse(data)
 
 def fetch_currency_rates(request):
-    # Currency.objects.all().delete()
-    # Country.objects.all().delete()
     if request.method == 'POST':
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
