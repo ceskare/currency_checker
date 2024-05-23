@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('main', '0004_delete_parsercounry_currency_change_and_more'),
     ]
@@ -18,6 +17,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='currency',
             name='country',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='currencies', to='main.country'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='currencies',
+                                    to='main.country'),
         ),
     ]

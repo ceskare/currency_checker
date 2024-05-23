@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('main', '0002_parsercounry_remove_currency_end_time_and_more'),
     ]

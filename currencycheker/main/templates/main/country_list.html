@@ -4,48 +4,50 @@
 <head>
     <meta charset="UTF-8">
     <title>Currency Chart</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 <body>
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h2>Выберите страны из списка чьи валюты вы хотите сравнить:</h2>
-        </div>
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <form method="post" action="{% url 'index' %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Вернуться к выбору дат</button>
-            </form>
-        </div>
-        <div class="checkbox-grid">
-            <form id="countryForm" method="post" action="{% url 'chart' %}">
-                {% csrf_token %}
-                {% for country in countries %}
-                    <input type="checkbox" id="{{ country.currency_code }}" name="selected_countries" value="{{ country.currency_code }}">
-                    <label for="{{ country.currency_code }}">{{ country.name }}</label><br>
-                {% endfor %}
-                <button type="submit" class="btn btn-primary" id="submitButton" disabled>Выбрать страны</button>
-            </form>
-        </div>
-    </main>
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2>Выберите страны из списка чьи валюты вы хотите сравнить:</h2>
+    </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <form method="post" action="{% url 'index' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Вернуться к выбору дат</button>
+        </form>
+    </div>
+    <div class="checkbox-grid">
+        <form id="countryForm" method="post" action="{% url 'chart' %}">
+            {% csrf_token %}
+            {% for country in countries %}
+            <input type="checkbox" id="{{ country.name }}" name="selected_countries"
+                   value="{{ country.name }}">
+            <label for="{{ country.name }}">{{ country.name }}</label><br>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary" id="submitButton" disabled>Выбрать страны</button>
+        </form>
+    </div>
+</main>
 
-    <script>
-        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        var submitButton = document.getElementById('submitButton');
+<script>
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    var submitButton = document.getElementById('submitButton');
 
-        checkboxes.forEach(function(checkbox) {
-            checkbox.addEventListener('change', function() {
-                var checked = Array.from(checkboxes).some(function(checkbox) {
-                    return checkbox.checked;
-                });
-
-                if (checked) {
-                    submitButton.removeAttribute('disabled');
-                } else {
-                    submitButton.setAttribute('disabled', 'disabled');
-                }
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            var checked = Array.from(checkboxes).some(function(checkbox) {
+                return checkbox.checked;
             });
+
+            if (checked) {
+                submitButton.removeAttribute('disabled');
+            } else {
+                submitButton.setAttribute('disabled', 'disabled');
+            }
         });
-    </script>
+    });
+</script>
 </body>
 </html>

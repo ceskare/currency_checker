@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('main', '0003_country_alter_currency_country_delete_parsercurrency'),
     ]

@@ -1,8 +1,10 @@
-from datetime import datetime, timedelta
-from bs4 import BeautifulSoup
+from datetime import datetime
+
 import requests
+from bs4 import BeautifulSoup
 
 from .models import Currency, Country
+
 
 class CurrencyRateParser:
     def __init__(self, code):
@@ -14,7 +16,7 @@ class CurrencyRateParser:
             "TRY": 52158,
             "CNY": 52207,
             "INR": 52238,
-            "JXY": 52246
+            "JPY": 52246
         }
 
     def fetch_currency_rates(self, start_date, end_date):
@@ -45,17 +47,6 @@ class CurrencyRateParser:
             return start_date <= user_date <= end_date
         except (ValueError, IndexError):
             return False
-    def parse_country(self):
-        response = requests.get("https://www.iban.ru/currency-codes")
-        html_code = BeautifulSoup(response.text, 'html.parser')
-        rows = html_code.find('tbody').find_all('tr')[1:]
-        for row in rows:
-            columns = row.find_all('td')
-            country_name = columns[0].text.strip()
-            currency_code = columns[2].text
-            existing_country = Country.objects.filter(name=country_name).first()
-            if existing_country is None:
-                Country.objects.get_or_create(name=country_name, currency_code=currency_code)
 
     def parse_currency_rates(self, start_date, end_date, response):
         html_code = BeautifulSoup(response.text, 'html.parser')
@@ -68,3 +59,18 @@ class CurrencyRateParser:
                 change = cells[3].text.strip()
                 Currency.objects.get_or_create(code=self.code, rate=rate, date=date, change=change)
 
+class CountryParser:
+    @staticmethod
+    def parse_country():
+        response = requests.get("https://www.iban.ru/currency-codes")
+        html_code = BeautifulSoup(response.text, 'html.parser')
+        rows = html_code.find('tbody').find_all('tr')[1:]
+        currency_codes = ["EUR", "USD", "GBP", "TRY", "CNY", "INR", "JPY"]
+        for row in rows:
+            columns = row.find_all('td')
+            country_name = columns[0].text.strip()
+            currency_code = columns[2].text
+            if currency_code in currency_codes:
+                existing_country = Country.objects.filter(name=country_name).first()
+                if existing_country is None:
+                    Country.objects.get_or_create(name=country_name, currency_code=currency_code)
