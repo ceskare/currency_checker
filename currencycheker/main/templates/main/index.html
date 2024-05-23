@@ -7,19 +7,28 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h4 class="h4">Выберете период за который нужно считать валюты стран мира</h4>
-    </div>
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <form method="post" action="{% url 'fetch_currency_rates' %}">
-            {% csrf_token %}
-            <label for="start_date">Начало:</label>
-            <input type="text" id="start_date" name="start_date" placeholder="Введите дату">
-            <label for="end_date">Конец:</label>
-            <input type="text" id="end_date" name="end_date" placeholder="Введите дату">
-            <button type="submit" class="btn btn-primary">Вывести список стран</button>
-        </form>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form method="post" action="{% url 'fetch_currency_rates' %}" class="d-flex justify-content-center mb-4">
+                    {% csrf_token %}
+                    <div class="form-group me-2">
+                        <label for="start_date" class="form-label">Начало:</label>
+                        <input type="text" id="start_date" name="start_date" class="form-control" placeholder="Введите дату">
+                    </div>
+                    <div class="form-group me-2">
+                        <label for="end_date" class="form-label">Конец:</label>
+                        <input type="text" id="end_date" name="end_date" class="form-control" placeholder="Введите дату">
+                    </div>
+                    <button type="submit" class="btn btn-primary align-self-end">Вывести список стран</button>
+                </form>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div id="container" style="height: 650px; min-width: 310px"></div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
